@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+		<meta charset="utf-8"/>
+		<meta author="Juan Manuel Rincón"/>
+		<title>Wonder League</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<link rel="stylesheet" type="text/css" href="../../../src/www/css/cssmod.css"/>
+		<link rel="shortcut icon" href="../../../src/www/assets/logo-proyecto-nombre.png"/>
+	</head>
+    <body>
+        <!-- CABECERA -->
+        <header>
+            <div class="logo">
+                <img src="../../../src/www/assets/logo-proyecto.png" alt="Logo Wonder League"/>
+            </div>
+            <nav>
+                <input type="checkbox" id="check" />
+                <label for="check" id="btnMenu">
+                    <img src="../../../src/www/assets/menu.png" alt="Icono de menú"/>
+                </label>
+                <ul>
+                    <li id="flex0"><img src="../../../src/www/assets/logo-proyecto.png" alt="Logo Wonder League"/></li>
+                    <li><a href="../Mockup_principal/Mockup_principal.html" class="opciones" id="liLiga">Liga</a></li>
+                    <li><a href="../Mockup_equipos/Mockup_equipos.html" class="opciones" id="liEquipos">Equipos</a></li>
+                </ul>
+            </nav>
+        </header>
+        <!-- WONDER LEAGUE -->
+        <div id="divWonderLeague">
+            <h1>MODIFICACIÓN REAL MADRID</h1>
+            <form>
+                <fieldset class="divsFormularios" id="escudo">
+                    <label for="inputfile">Escudo:&nbsp;</label>
+                    <input id="inputfile" type="file">
+                </fieldset>
+                <fieldset class="divsFormularios" id="nombre">
+                    <label for="nombreee">Nombre:&nbsp;</label>
+                    <input id="nombreee" type="text">
+                </fieldset>
+                <fieldset class="divsFormularios" id="descripcion">
+                    <label for="descripciooon">Descripción:</label><br>
+                    <textarea id="descripciooon"></textarea>
+                </fieldset>
+                <fieldset class="divsFormularios" id="fecha">
+                    <label for="fechaaa">Fecha de Creación:&nbsp;</label><br>
+                    <input id="fechaaa"type="date">
+                </fieldset>
+                <fieldset class="divsFormularios" id="ligas">
+                    <label for="numLigas">Nº de ligas ganadas:&nbsp;</label>
+                    <input id="numLigas"type="number">
+                </fieldset>
+                <fieldset class="divsFormularios" id="colores">
+                    <label for="coloreees">Colores del Equipo:</label><br>
+                    <input id="coloreees1"type="checkbox"><label for="coloreees1">Blanco</label><br>
+                    <input id="coloreees2"type="checkbox"><label for="coloreees2">Negro</label><br>
+                    <input id="coloreees3"type="checkbox"><label for="coloreees3">Rojo</label><br>
+                    <input id="coloreees4"type="checkbox"><label for="coloreees4">Azul</label><br>
+                    <input id="coloreees5"type="checkbox"><label for="coloreees5">Verde</label><br>
+                    <input id="coloreees6"type="checkbox"><label for="coloreees6">Amarillo</label>
+                </fieldset>
+                <fieldset class="divsFormularios" id="ascenso">
+                    <label for="ascendido">Recien ascendido:</label><br>
+                    <input id="ascendido1"  type="radio" name="ascendido"><label for="ascendido1">Sí</label><br>
+                    <input id="ascendido2" type="radio" name="ascendido"><label for="ascendido2">No</label>
+                </fieldset>
+                <fieldset class="divsFormularios" id="titulos">
+                    <label for="comunidad">Comunidad Autónoma</label><br>
+                    <select id="comunidad">
+                        <option>Comunidad de Madrid</option>
+                        <option>Cataluña</option>
+                        <option>Andalucía</option>
+                        <option>País Vasco</option>
+                    </select>
+                </fieldset>
+                <a href="../Mockup_principal/Mockup_principal.html"><button id="btnEnviar">Enviar</button></a>
+            </form>
+        </div>
+        <div id="footer">
+            <p>WONDER LEAGUE</p>
+            <img src="../../../src/www/assets/wcag2AA.png" alt="Logo WCAG 2.0 AA"/>
+        </div>
+    </body>
+</html>
