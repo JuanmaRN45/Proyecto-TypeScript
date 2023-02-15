@@ -149,7 +149,7 @@ class idb{
         peticion.onsuccess = (evento:any) => {this.conexion = evento.target.result}
     }
     crear(){
-        const tabla = this.conexion.createObjectStore('Equipos', {autoIncrement: true})
+        const tabla = this.conexion.createObjectStore('Equipos', { keyPath: 'id', autoIncrement: true })
     }
     insertar(objeto, callback){
         const transaccion = this.conexion.transaction(['Equipos'], 'readwrite')
@@ -223,18 +223,18 @@ class Vista{
 }
 
 class VistaAlta extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 	public div: any;
 	public escudo: any;
 	public valorescudo: any;
-	public btnEnviar: any;
+	public btnEnviar: HTMLButtonElement;
 
 	/**
      * Contructor de la clase VistaAlta
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
           
@@ -257,17 +257,17 @@ class VistaAlta extends Vista {
 
      insertarIndex(){
           
-          let nombre = this.div.getElementsByTagName('input')[1]
-          let valornombre = nombre.value
+          let nombre:HTMLInputElement = this.div.getElementsByTagName('input')[1]
+          let valornombre:string = nombre.value
           
-          let descripcion = this.div.getElementsByTagName('textarea')[0]
-          let valordescripcion = descripcion.value
+          let descripcion:HTMLTextAreaElement = this.div.getElementsByTagName('textarea')[0]
+          let valordescripcion:string = descripcion.value
           
           let fecha = this.div.getElementsByTagName('input')[2]
-          let valorfecha = fecha.value
+          let valorfecha:Date = fecha.value
 
           let ligas = this.div.getElementsByTagName('input')[3]
-          let valorligas = ligas.value
+          let valorligas:number = ligas.value
 
           let colores1 = document.getElementById('coloreees1') as HTMLInputElement;
           let colores2 = document.getElementById('coloreees2')as HTMLInputElement;
@@ -299,25 +299,25 @@ class VistaAlta extends Vista {
           if(valorascenso[1]==true){valorascenso[1]='No'}
           
           let comunidad = this.div.getElementsByTagName('select')[0]
-          let valorcomunidad = comunidad.value
+          let valorcomunidad:string = comunidad.value
           let objeto = new Equipos(this.valorescudo,valornombre,valordescripcion,valorfecha,valorligas,colores,valorascenso,valorcomunidad)
           this.controlador.insertar(objeto)
      } 
 }
 
 class VistaEquipos extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 	public div2: any;
 	public divWonder: any;
 	public bd: any;
-	public lista: any;
+	public lista: [];
 
 	/**
      * Contructor de la clase VistaEquipos
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
           this.div2 = document.getElementById('liEquipos');
@@ -433,15 +433,30 @@ class VistaEquipos extends Vista {
                          botEliminar.textContent = 'Eliminar'
                          divBot.appendChild(botEliminar)
 
+                         
+                         //botEliminar.onclick=this.borrar(this.lista[i]['id']);
+                         
+
+                         
+
                          i=i+1
                     }
                }).bind(this)
           }
      }
+     /*borrar(id){
+          const peticion =window.indexedDB.open("WonderLeague")
+          peticion.onsuccess= ((evento) =>{
+               this.bd=evento.target.result;
+               const peticion = this.bd.transaction('Equipos', 'readwrite').objectStore('Equipos').delete(id);
+               const peticion2 = this.bd.transaction('Equipos', 'readonly').objectStore('Equipos').getAll();
+          }).bind(this)
+          this.controlador.pulsarNavLiga()
+     }*/
 }
 
 class VistaLiga extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 	public btnAnadir: any;
 
 	/**
@@ -449,7 +464,7 @@ class VistaLiga extends Vista {
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
 
@@ -464,7 +479,7 @@ class VistaLiga extends Vista {
 }
 
 class VistaNav{
-	public controlador: any;
+	public controlador: Controlador;
 	public nav: any;
 	public btnLogo: any;
 	public btnLiga: any;
@@ -476,7 +491,7 @@ class VistaNav{
 	 *	@param {HTMLElement} nav Nav de HTML en el que se desplegará la vista.
 	 *	@param {Object} controlador Controlador de la vista del administrador.
 	 */
-	constructor(nav, controlador) {
+	constructor(nav, controlador:Controlador) {
 		this.controlador = controlador
 		this.nav = nav
 
@@ -505,42 +520,42 @@ class VistaNav{
 }
 
 class VistaListado extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 
 	/**
      * Contructor de la clase VistaCategorias
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
 	}
 }
 
 class VistaModEquipo extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 
 	/**
      * Contructor de la clase VistaCategorias
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
 	}
 }
 
 class VistaModTabla extends Vista {
-	public controlador: any;
+	public controlador: Controlador;
 
 	/**
      * Contructor de la clase VistaCategorias
      * @param {HTMLDivElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
-	constructor(div, controlador) {
+	constructor(div, controlador:Controlador) {
 		super(div)
           this.controlador = controlador
 	}

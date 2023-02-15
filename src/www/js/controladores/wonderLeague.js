@@ -118,7 +118,7 @@ var idb = /** @class */ (function () {
         peticion.onsuccess = function (evento) { _this.conexion = evento.target.result; };
     }
     idb.prototype.crear = function () {
-        var tabla = this.conexion.createObjectStore('Equipos', { autoIncrement: true });
+        var tabla = this.conexion.createObjectStore('Equipos', { keyPath: 'id', autoIncrement: true });
     };
     idb.prototype.insertar = function (objeto, callback) {
         var transaccion = this.conexion.transaction(['Equipos'], 'readwrite');
@@ -371,6 +371,7 @@ var VistaEquipos = /** @class */ (function (_super) {
                     var botEliminar = document.createElement('button');
                     botEliminar.textContent = 'Eliminar';
                     divBot.appendChild(botEliminar);
+                    //botEliminar.onclick=this.borrar(this.lista[i]['id']);
                     i = i + 1;
                 }
             }).bind(_this);
