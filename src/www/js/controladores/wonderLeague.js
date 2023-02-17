@@ -112,6 +112,7 @@ var idb = /** @class */ (function () {
         var peticion = indexedDB.open('WonderLeague', 2);
         peticion.onerror = function (evento) { throw 'Error al conectar indexedDB'; };
         peticion.onupgradeneeded = function (evento) {
+            console.log(evento);
             _this.conexion = evento.target.result;
             _this.crear();
         };
@@ -185,7 +186,7 @@ var VistaAlta = /** @class */ (function (_super) {
     __extends(VistaAlta, _super);
     /**
      * Contructor de la clase VistaAlta
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
     function VistaAlta(div, controlador) {
@@ -371,12 +372,22 @@ var VistaEquipos = /** @class */ (function (_super) {
                     var botEliminar = document.createElement('button');
                     botEliminar.textContent = 'Eliminar';
                     divBot.appendChild(botEliminar);
-                    //botEliminar.onclick=this.borrar(this.lista[i]['id']);
+                    //botEliminar.addEventListener("onclick", this.borrar(this.lista[i]['id']));
                     i = i + 1;
                 }
             }).bind(_this);
         };
     };
+    /*VistaEquipos.prototype.borrar = function (id) {
+        var _this = this;
+        var peticion = window.indexedDB.open("WonderLeague");
+        peticion.onsuccess = (function (evento) {
+            _this.bd = evento.target.result;
+            var peticion = _this.bd.transaction('Equipos', 'readwrite').objectStore('Equipos')["delete"](id);
+            var peticion2 = _this.bd.transaction('Equipos', 'readonly').objectStore('Equipos').getAll();
+        }).bind(this);
+        this.controlador.pulsarNavLiga();
+    };*/
     return VistaEquipos;
 }(Vista));
 var VistaLiga = /** @class */ (function (_super) {
@@ -433,7 +444,7 @@ var VistaListado = /** @class */ (function (_super) {
     __extends(VistaListado, _super);
     /**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
     function VistaListado(div, controlador) {
@@ -447,7 +458,7 @@ var VistaModEquipo = /** @class */ (function (_super) {
     __extends(VistaModEquipo, _super);
     /**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
     function VistaModEquipo(div, controlador) {
@@ -461,7 +472,7 @@ var VistaModTabla = /** @class */ (function (_super) {
     __extends(VistaModTabla, _super);
     /**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
     function VistaModTabla(div, controlador) {

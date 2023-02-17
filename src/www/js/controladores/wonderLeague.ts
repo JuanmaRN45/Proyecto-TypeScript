@@ -8,19 +8,19 @@ class Controlador {
 	 */
 
     public modelo:Modelo
-    public nav:any
+    public nav:HTMLElement
     public vistaNav:VistaNav
-    public divLiga:any
+    public divLiga:HTMLElement
     public vistaLiga:VistaLiga
-    public divEquipos:any
+    public divEquipos:HTMLElement
     public vistaEquipos:VistaEquipos
-    public divAlta:any
+    public divAlta:HTMLElement
     public vistaAlta:VistaAlta
-    public divModTabla:any
+    public divModTabla:HTMLElement
     public vistaModTabla:VistaModTabla
-    public divModEquipo:any
+    public divModEquipo:HTMLElement
     public vistaModEquipo:VistaModEquipo
-    public divListado:any
+    public divListado:HTMLElement
     public vistaListado:VistaListado
 
 	constructor() {
@@ -42,22 +42,22 @@ class Controlador {
 		this.nav = document.getElementsByTagName('nav')[0]
 		this.vistaNav = new VistaNav(this.nav, this)
 
-        this.divLiga = document.getElementById('liga')
+        this.divLiga = document.getElementById('liga')!
         this.vistaLiga = new VistaLiga(this.divLiga, this)
 
-        this.divEquipos = document.getElementById('equipos')
+        this.divEquipos = document.getElementById('equipos')!
         this.vistaEquipos = new VistaEquipos(this.divEquipos, this)
 
-		this.divAlta=document.getElementById("alta");
+		this.divAlta=document.getElementById("alta")!
 		this.vistaAlta=new VistaAlta(this.divAlta, this);
 
-		this.divModTabla = document.getElementById('modTabla')
+		this.divModTabla = document.getElementById('modTabla')!
         this.vistaModTabla = new VistaModTabla(this.divModTabla, this)
 
-		this.divModEquipo = document.getElementById('modEquipo')
+		this.divModEquipo = document.getElementById('modEquipo')!
 		this.vistaModEquipo = new VistaModEquipo(this.divModEquipo, this)
 
-		this.divListado = document.getElementById('listado')
+		this.divListado = document.getElementById('listado')!
 		this.vistaListado = new VistaListado(this.divListado, this)
 		this.pulsarNavLiga()
 	}
@@ -107,7 +107,7 @@ class Controlador {
 		console.log('La inserción ha ido bien')
 	}
 
-	getModelo() {
+	getModelo():Modelo {
 		return this.modelo
 	}
 }
@@ -117,13 +117,13 @@ export class Equipos{
 	public escudo: string;
 	public nombre: string;
 	public descripcion: string;
-	public fechaCreacion: Date;
+	public fechaCreacion: string;
 	public ligasGanadas: number;
 	public colores: [];
 	public ascendido: [];
 	public comunidad: string;
 
-	constructor(valorescudo: string,valornombre: string,valordescripcion: string,valorfecha: Date,valorligas: number,colores: [],valorascenso: [],valorcomunidad: string){
+	constructor(valorescudo: string,valornombre: string,valordescripcion: string,valorfecha: string,valorligas: number,colores: [],valorascenso: [],valorcomunidad: string){
 		this.escudo = valorescudo
 		this.nombre = valornombre
 		this.descripcion = valordescripcion
@@ -137,25 +137,26 @@ export class Equipos{
 
 class idb{
 	public controlador: Controlador;
-	public conexion: any;
+	public conexion: IDBDatabase;
 	constructor(controlador:Controlador) {
         this.controlador=controlador
-		const peticion = indexedDB.open('WonderLeague', 2)
+		const peticion:IDBOpenDBRequest = indexedDB.open('WonderLeague', 2)
         peticion.onerror = evento => {throw 'Error al conectar indexedDB'}
         peticion.onupgradeneeded = (evento:any) => {
+                    console.log(evento)
 				this.conexion = evento.target.result
 				this.crear()
             }
         peticion.onsuccess = (evento:any) => {this.conexion = evento.target.result}
     }
     crear(){
-        const tabla = this.conexion.createObjectStore('Equipos', { keyPath: 'id', autoIncrement: true })
+        const tabla:IDBObjectStore = this.conexion.createObjectStore('Equipos', { keyPath: 'id', autoIncrement: true })
     }
-    insertar(objeto, callback){
-        const transaccion = this.conexion.transaction(['Equipos'], 'readwrite')
+    insertar(objeto:Equipos, callback){
+        const transaccion:IDBTransaction = this.conexion.transaction(['Equipos'], 'readwrite')
         transaccion.onerror = evento => {throw 'Error al insertar'}
         const tabla = transaccion.objectStore('Equipos')
-        const peticion = tabla.add(objeto)
+        const peticion:IDBRequest = tabla.add(objeto)
         peticion.onsuccess = callback
         this.controlador.pulsarNavLiga()
     }
@@ -163,11 +164,11 @@ class idb{
 
 class Modelo{
 	public controlador: Controlador;
-	public callback: any;
+	public callback: Function;
 	public callbacks: any;
 	public idb: idb;
 
-	constructor(controlador:Controlador, callback) {
+	constructor(controlador:Controlador, callback: Function) {
 		this.controlador = controlador
 		this.callback = callback
 		this.callbacks = []	// Array de callbacks para implementar el observador
@@ -225,13 +226,13 @@ class Vista{
 class VistaAlta extends Vista {
 	public controlador: Controlador;
 	public div: any;
-	public escudo: any;
+	public escudo: HTMLInputElement;
 	public valorescudo: any;
 	public btnEnviar: HTMLButtonElement;
 
 	/**
      * Contructor de la clase VistaAlta
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
 	constructor(div, controlador:Controlador) {
@@ -239,11 +240,11 @@ class VistaAlta extends Vista {
           this.controlador = controlador
           
           this.div = document.getElementById('alta')
-          this.escudo =  document.getElementById('inputfile')
+          this.escudo =  document.getElementById('inputfile') as HTMLInputElement
           this.valorescudo = null
           this.escudo.addEventListener('change', e => {
 
-               const archivo = this.escudo.files[0]
+               const archivo = this.escudo.files![0]
                const lector = new FileReader()
                lector.addEventListener('load',() => {
                     this.valorescudo = lector.result
@@ -255,7 +256,7 @@ class VistaAlta extends Vista {
 		this.btnEnviar.onclick = this.insertarIndex.bind(this)
 	}
 
-     insertarIndex(){
+     insertarIndex():void{
           
           let nombre:HTMLInputElement = this.div.getElementsByTagName('input')[1]
           let valornombre:string = nombre.value
@@ -263,8 +264,8 @@ class VistaAlta extends Vista {
           let descripcion:HTMLTextAreaElement = this.div.getElementsByTagName('textarea')[0]
           let valordescripcion:string = descripcion.value
           
-          let fecha = this.div.getElementsByTagName('input')[2]
-          let valorfecha:Date = fecha.value
+          let fecha = <HTMLInputElement>this.div.getElementsByTagName('input')[2]
+          let valorfecha:string = fecha.value
 
           let ligas = this.div.getElementsByTagName('input')[3]
           let valorligas:number = ligas.value
@@ -325,7 +326,7 @@ class VistaEquipos extends Vista {
           this.divWonder = document.getElementsByClassName('divWonder')[0]
 	}
 
-     listar(){
+     listar():void{
           while(this.divWonder.firstChild){
                this.divWonder.firstChild.remove()
           }
@@ -340,79 +341,79 @@ class VistaEquipos extends Vista {
                     console.log(this.lista)
                     let i=0
                     for(let listas of this.lista){
-                         let contenedor = document.createElement('div')
+                         let contenedor = document.createElement('div') as HTMLDivElement
                          contenedor.classList.add('contenedor')
                          this.divWonder.appendChild(contenedor)
 
-                         let imagen = document.createElement('img')
+                         let imagen = document.createElement('img')as HTMLImageElement
                          imagen.src = this.lista[i]['escudo']
                          imagen.classList.add('imgEscudo')
                          contenedor.appendChild(imagen)
 
-                         let divNombre = document.createElement('div')
+                         let divNombre = document.createElement('div')as HTMLDivElement
                          divNombre.classList.add('divsFormularios')
                          divNombre.classList.add('partidos')
                          contenedor.appendChild(divNombre)
 
-                         let labelNom = document.createElement('label')
+                         let labelNom = document.createElement('label')as HTMLLabelElement
                          labelNom.textContent = 'Nombre: '
                          divNombre.appendChild(labelNom)
 
-                         let pNom = document.createElement('p')
+                         let pNom = document.createElement('p')as HTMLParagraphElement
                          pNom.textContent = this.lista[i]['nombre']
                          divNombre.appendChild(pNom)
 
-                         let divDesc = document.createElement('div')
+                         let divDesc = document.createElement('div')as HTMLDivElement
                          divDesc.classList.add('divsFormularios')
                          divDesc.classList.add('puntos')
                          contenedor.appendChild(divDesc)
 
-                         let labelDes = document.createElement('label')
+                         let labelDes = document.createElement('label')as HTMLLabelElement
                          labelDes.textContent = 'Descripción: '
                          divDesc.appendChild(labelDes)
 
-                         let pDes = document.createElement('p')
+                         let pDes = document.createElement('p')as HTMLParagraphElement
                          pDes.classList.add('descripcion')
                          pDes.textContent = this.lista[i]['descripcion']
                          divDesc.appendChild(pDes)
 
-                         let divfecha = document.createElement('div')
+                         let divfecha = document.createElement('div')as HTMLDivElement
                          divfecha.classList.add('divsFormularios')
                          divfecha.classList.add('goalaverage')
                          contenedor.appendChild(divfecha)
 
-                         let labelfec = document.createElement('label')
+                         let labelfec = document.createElement('label')as HTMLLabelElement
                          labelfec.textContent = 'Fecha de Fundación: '
                          divfecha.appendChild(labelfec)
 
-                         let pfec = document.createElement('p')
+                         let pfec = document.createElement('p')as HTMLParagraphElement
                          pfec.textContent = this.lista[i]['fechaCreacion']
                          divfecha.appendChild(pfec)
 
-                         let divcom = document.createElement('div')
+                         let divcom = document.createElement('div')as HTMLDivElement
                          divcom.classList.add('divsFormularios')
                          divcom.classList.add('golesaf')
                          contenedor.appendChild(divcom)
 
-                         let labelcom = document.createElement('label')
+                         let labelcom = document.createElement('label')as HTMLLabelElement
                          labelcom.textContent = 'Comunidad Autónoma: '
                          divcom.appendChild(labelcom)
 
-                         let pcom = document.createElement('p')
+                         let pcom = document.createElement('p')as HTMLParagraphElement
                          pcom.classList.add('titulos')
                          pcom.textContent = this.lista[i]['comunidad']
                          divcom.appendChild(pcom)
 
-                         let divra = document.createElement('div')
+                         let divra = document.createElement('div')as HTMLDivElement
                          divra.classList.add('divsFormularios')
                          divra.classList.add('golesec')
                          contenedor.appendChild(divra)
 
-                         let labelra = document.createElement('label')
+                         let labelra = document.createElement('label')as HTMLLabelElement
                          labelra.textContent = 'Recién Ascendido: '
                          divra.appendChild(labelra)
 
-                         let pra = document.createElement('p')
+                         let pra = document.createElement('p')as HTMLParagraphElement
                          if(this.lista[i]['ascendido'][0]=='Si'){
                               pra.textContent = this.lista[i]['ascendido'][0]
                          }else{
@@ -420,21 +421,21 @@ class VistaEquipos extends Vista {
                          }
                          divra.appendChild(pra)
 
-                         let divBot = document.createElement('div')
+                         let divBot = document.createElement('div')as HTMLDivElement
                          divBot.classList.add('divsFormularios')
                          divBot.classList.add('btnEditar')
                          contenedor.appendChild(divBot)
 
-                         let botEd = document.createElement('button')
+                         let botEd = document.createElement('button')as HTMLButtonElement
                          botEd.textContent = 'Editar'
                          divBot.appendChild(botEd)
 
-                         let botEliminar = document.createElement('button')
+                         let botEliminar = document.createElement('button')as HTMLButtonElement
                          botEliminar.textContent = 'Eliminar'
                          divBot.appendChild(botEliminar)
 
                          
-                         //botEliminar.onclick=this.borrar(this.lista[i]['id']);
+                         //botEliminar.addEventListener("onclick",this.borrar(this.lista[i]['id']))
                          
 
                          
@@ -444,12 +445,12 @@ class VistaEquipos extends Vista {
                }).bind(this)
           }
      }
-     /*borrar(id){
-          const peticion =window.indexedDB.open("WonderLeague")
-          peticion.onsuccess= ((evento) =>{
+     /*borrar(id):void{
+          const peticion:IDBOpenDBRequest =window.indexedDB.open("WonderLeague")
+          peticion.onsuccess= ((evento:any) =>{
                this.bd=evento.target.result;
-               const peticion = this.bd.transaction('Equipos', 'readwrite').objectStore('Equipos').delete(id);
-               const peticion2 = this.bd.transaction('Equipos', 'readonly').objectStore('Equipos').getAll();
+               const peticion:IDBTransaction = this.bd.transaction('Equipos', 'readwrite').objectStore('Equipos').delete(id);
+               const peticion2:IDBTransaction = this.bd.transaction('Equipos', 'readonly').objectStore('Equipos').getAll();
           }).bind(this)
           this.controlador.pulsarNavLiga()
      }*/
@@ -457,7 +458,7 @@ class VistaEquipos extends Vista {
 
 class VistaLiga extends Vista {
 	public controlador: Controlador;
-	public btnAnadir: any;
+	public btnAnadir: HTMLButtonElement;
 
 	/**
      * Contructor de la clase VistaCategorias
@@ -469,7 +470,7 @@ class VistaLiga extends Vista {
           this.controlador = controlador
 
           /*Botones pantalla liga*/
-		this.btnAnadir = document.getElementById('anaaaaadir')
+		this.btnAnadir = document.getElementById('anaaaaadir')as HTMLButtonElement
 		this.btnAnadir.onclick = this.pulsarAnadir.bind(this)
 	}
 
@@ -480,18 +481,18 @@ class VistaLiga extends Vista {
 
 class VistaNav{
 	public controlador: Controlador;
-	public nav: any;
-	public btnLogo: any;
-	public btnLiga: any;
-	public btnEquipos: any;
-	public btnBusqueda: any;
+	public nav: HTMLElement;
+	public btnLogo: HTMLLIElement;
+	public btnLiga:  HTMLLIElement;
+	public btnEquipos:  HTMLLIElement;
+	public btnBusqueda:  HTMLLIElement;
 
 	/**
 	 *	Constructor de la clase.
 	 *	@param {HTMLElement} nav Nav de HTML en el que se desplegará la vista.
 	 *	@param {Object} controlador Controlador de la vista del administrador.
 	 */
-	constructor(nav, controlador:Controlador) {
+	constructor(nav:HTMLElement, controlador:Controlador) {
 		this.controlador = controlador
 		this.nav = nav
 
@@ -506,15 +507,15 @@ class VistaNav{
 		this.btnBusqueda.onclick = this.pulsarNavListado.bind(this)
 		
 	}
-	pulsarLiga() {
+	pulsarLiga():void {
 		this.controlador.pulsarNavLiga()
 	}
 
-	pulsarEquipos() {
+	pulsarEquipos():void  {
 		this.controlador.pulsarNavEquipos()
 	}
 
-	pulsarNavListado() {
+	pulsarNavListado():void  {
 		this.controlador.pulsarListado()
 	}
 }
@@ -524,7 +525,7 @@ class VistaListado extends Vista {
 
 	/**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
 	constructor(div, controlador:Controlador) {
@@ -538,7 +539,7 @@ class VistaModEquipo extends Vista {
 
 	/**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
 	constructor(div, controlador:Controlador) {
@@ -552,7 +553,7 @@ class VistaModTabla extends Vista {
 
 	/**
      * Contructor de la clase VistaCategorias
-     * @param {HTMLDivElement} div Div de la vista
+     * @param {HTMLElement} div Div de la vista
      * @param {Object} controlador Controlador de la vista
      */
 	constructor(div, controlador:Controlador) {
